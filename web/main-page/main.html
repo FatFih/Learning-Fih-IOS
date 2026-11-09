@@ -55,17 +55,10 @@
     <main class="center">
         <h1 id="welcomeMessage">Learning-Fih</h1>
 
-        <!-- The nearest exam; tapping it opens that day in the calendar -->
-        <a class="exam-card" id="nextExam" href="../calendar-page/calendar-page.html" hidden>
-            <span class="exam-card-top">
-                <span class="exam-label">Következő dolgozat</span>
-                <span class="exam-countdown" id="nextExamCountdown"></span>
-            </span>
-            <span class="exam-subject" id="nextExamSubject"></span>
-            <span class="exam-when" id="nextExamWhen"></span>
-            <span class="exam-details" id="nextExamDetails"></span>
-            <span class="exam-more" id="nextExamMore"></span>
-        </a>
+        <!-- Upcoming exams (main.js fills it): one big card, or a 2-column grid when there are more.
+             Tapping a card opens that day in the calendar. -->
+        <p class="exam-grid-title" id="examGridTitle" hidden>Közelgő dolgozatok</p>
+        <div class="exam-grid" id="examGrid" hidden></div>
         <p class="no-exam" id="noExam" hidden>Nincs közelgő dolgozat.</p>
     </main>
 
