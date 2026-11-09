@@ -1,0 +1,344 @@
+body {
+    background-color: #050505;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Page content between the top bar (ends at 74px) and the bottom bar */
+.settings {
+    box-sizing: border-box;
+    width: min(560px, 100%);
+    margin: 0 auto;
+    padding: 90px 12px 98px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings h1 {
+    margin: 6px 4px 0;
+    font-size: 1.5rem;
+}
+
+/* White outline, slightly dark, blurred - same as the top bar and the cards elsewhere */
+.card {
+    padding: 16px 18px;
+    border: 2px solid white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 255, 255, 0.08);
+    background-color: rgba(30, 30, 30, 0.4);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+}
+
+.card h2 {
+    margin: 0 0 12px;
+    font-size: 1.15rem;
+}
+
+.hint {
+    margin: 10px 0 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.saved {
+    margin: 10px 0 0;
+    color: #4cd47b;
+}
+
+.saved.failed {
+    color: #ff6b6b;
+}
+
+/* ----- Dark / light switch ----- */
+.segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 4px;
+    border: 2px solid currentColor;
+    border-radius: 10px;
+}
+
+.segmented button {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.segmented button[aria-checked="true"] {
+    background-color: white;
+    color: black;
+    font-weight: 700;
+}
+
+.segmented button:focus-visible,
+select:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+}
+
+/* ----- Reminder time ----- */
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* 24-hour time: hour and minute dropdowns side by side */
+.time-picker {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    font-weight: 700;
+}
+
+select {
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    font: inherit;
+    font-weight: 700;
+}
+
+select option {
+    background-color: #1e1e1e;
+}
+
+/* From Uiverse.io by kiranmayee-abbireddy */ 
+.uiverse-midnight-sky {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  height: 100vh;
+  height: 100lvh; /* covers the area under Android's toolbar/gesture bar */
+  overflow: hidden;
+  background-color: #050505;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fine grain over the whole sky: hides the stepped "rings" (gradient banding) on Android */
+.uiverse-midnight-sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Base Sky Layer (with large soft glows for the acrylic blur to pick up) */
+.uiverse-midnight-sky .sky-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle 55vmin at 28% 35%, rgba(100, 70, 220, 0.55), transparent),
+    radial-gradient(circle 55vmin at 72% 72%, rgba(0, 160, 210, 0.45), transparent),
+    radial-gradient(circle 41vmin at 62% 18%, rgba(210, 70, 150, 0.35), transparent),
+    #050505;
+}
+
+/* Generic star layer style */
+.uiverse-midnight-sky .stars {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+/* Layer 1: Small fast twinkling stars - High density */
+.uiverse-midnight-sky .stars-1 {
+  background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 10%, #fff, transparent);
+  background-size: 200px 200px;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+/* Layer 2: Medium slower twinkling stars */
+.uiverse-midnight-sky .stars-2 {
+  background-image: radial-gradient(1.5px 1.5px at 20% 40%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 60% 85%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 85% 65%, #fff, transparent);
+  background-size: 300px 300px;
+  animation: twinkle 5s ease-in-out infinite 1s;
+}
+
+/* Layer 3: Larger, very slow twinkling stars */
+.uiverse-midnight-sky .stars-3 {
+  background-image: radial-gradient(2px 2px at 40% 70%, #fff, transparent),
+    radial-gradient(2px 2px at 10% 80%, #fff, transparent),
+    radial-gradient(2px 2px at 80% 40%, #fff, transparent);
+  background-size: 400px 400px;
+  animation: twinkle 7s ease-in-out infinite 2s;
+}
+
+/* Meteor / Shooting Star Layer */
+.uiverse-midnight-sky .meteor {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Meteor Tail */
+.uiverse-midnight-sky .meteor::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, #fff, transparent);
+}
+
+/* Meteor Instances with staggered starts */
+.uiverse-midnight-sky .m1 {
+  top: 10%;
+  left: 110%;
+  animation: shoot 8s linear infinite;
+}
+.uiverse-midnight-sky .m2 {
+  top: 30%;
+  left: 110%;
+  animation: shoot 12s linear infinite 4s;
+}
+.uiverse-midnight-sky .m3 {
+  top: 50%;
+  left: 110%;
+  animation: shoot 10s linear infinite 2s;
+}
+
+/* The Catfish (replaces the moon; the HTML element still has class "moon") */
+.uiverse-midnight-sky .moon {
+  position: absolute;
+  top: 15%;
+  right: 12%;
+  width: 110px;
+  height: 110px;
+  border-radius: 0;
+  box-shadow: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='18 -2 180 180' aria-hidden='true' focusable='false'%3E%3Cg fill='%23fdfbd3'%3E%3Cpath d='M119.2 47.4C120.4 45.6 124.7 38.9 126.9 36.7C129.0 34.5 130.4 34.8 132.1 34.3C133.7 33.8 135.2 33.7 136.7 33.8C138.2 33.8 139.6 34.1 140.9 34.5C142.3 34.9 143.5 35.5 144.7 36.1C145.9 36.8 146.1 36.9 148.0 38.5C149.9 40.1 153.6 43.2 156.1 45.8C158.6 48.4 161.0 51.2 163.1 54.2C165.2 57.1 167.2 60.2 168.8 63.4C170.4 66.6 171.5 70.2 172.5 73.6C173.5 77.1 174.3 80.6 174.8 84.1C175.3 87.6 175.5 91.2 175.5 94.7C175.5 98.2 175.2 101.8 174.8 105.2C174.3 108.7 173.5 112.1 172.6 115.4C171.6 118.7 170.4 122.0 169.1 125.1C167.7 128.3 166.0 131.3 164.3 134.2C162.5 137.0 160.5 139.8 158.3 142.4C156.2 144.9 153.8 147.4 151.3 149.6C148.9 151.8 146.2 153.9 143.5 155.7C140.8 157.5 137.9 159.2 135.0 160.6C132.1 162.1 129.0 163.3 126.0 164.3C122.9 165.3 119.8 166.1 116.6 166.6C113.5 167.2 110.3 167.5 107.1 167.7C104.0 167.8 100.8 167.7 97.6 167.4C94.5 167.1 91.4 166.5 88.4 165.8C85.4 165.0 82.4 164.1 79.5 163.0C76.7 161.8 73.9 160.5 71.2 159.0C68.6 157.5 66.0 155.8 63.6 153.9C61.2 152.1 58.9 150.1 56.8 147.9C54.7 145.8 52.7 143.5 51.0 141.1C49.2 138.8 47.5 136.3 46.1 133.7C44.7 131.1 43.2 127.7 42.3 125.7C41.4 123.7 41.1 122.2 40.8 121.5L54.0 116.8C54.2 117.3 54.5 118.4 55.4 119.9C56.2 121.4 57.6 123.8 58.9 125.7C60.2 127.5 61.7 129.2 63.2 130.8C64.8 132.4 66.5 133.9 68.2 135.3C70.0 136.6 71.8 137.9 73.7 138.9C75.7 140.0 77.7 140.9 79.7 141.7C81.7 142.5 83.8 143.1 85.8 143.6C87.9 144.0 90.1 144.4 92.2 144.5C94.2 144.7 96.4 144.7 98.4 144.6C100.5 144.4 102.6 144.1 104.6 143.7C106.6 143.3 108.6 142.7 110.5 142.0C112.4 141.3 114.2 140.5 116.0 139.6C117.7 138.6 119.4 137.5 121.0 136.4C122.6 135.2 124.1 133.9 125.4 132.6C126.8 131.2 128.1 129.7 129.2 128.2C130.4 126.7 131.4 125.1 132.3 123.5C133.2 121.8 134.0 120.1 134.6 118.4C135.3 116.7 135.8 114.9 136.2 113.2C136.6 111.4 136.8 109.6 137.0 107.9C137.1 106.1 137.1 104.3 137.0 102.6C136.8 100.9 136.6 99.1 136.2 97.5C135.9 95.8 135.4 94.2 134.8 92.6C134.2 91.0 133.5 89.5 132.7 88.1C131.9 86.7 130.9 85.4 130.1 84.0C129.2 82.7 128.4 81.3 127.5 80.0C126.6 78.7 125.6 77.5 124.5 76.4C123.4 75.2 121.8 73.9 120.9 73.2C120.1 72.5 120.0 72.5 119.5 72.1C119.1 71.7 118.7 71.2 118.4 70.6C118.1 69.9 117.8 69.2 117.6 68.3C117.3 67.4 117.2 66.4 117.0 65.1C116.9 63.7 116.5 63.2 116.9 60.2C117.2 57.3 118.8 49.5 119.2 47.4Z'/%3E%3Cpath d='M42.0 125.8Q29.6 115.0 24.1 104.0Q41.4 107.2 45.2 111.6Q47.4 106.5 64.0 101.9Q60.9 108.3 55.7 119.7Z'/%3E%3Cpath opacity='.75' d='M172.2 80.9Q190.0 94.3 189.2 111.9Q174.0 113.9 166.1 126.7Z'/%3E%3Cpath opacity='.75' d='M114.8 164.9Q108.0 175.4 99.1 175.7Q95.6 168.6 88.5 163.8Z'/%3E%3Cpath opacity='.75' d='M129.3 79.1Q118.4 90.9 118.5 94.3Q132.3 91.9 136.1 90.5Z'/%3E%3Cpath opacity='.75' d='M119.8 139.6Q108.0 131.4 101.1 132.9Q99.2 143.6 87.8 146.0Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23fdfbd3' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M121.9 43.1C113.2 32.3 101.3 24.0 93.6 8.2'/%3E%3Cpath d='M120.4 46.8C111.8 39.1 98.9 38.0 86.6 31.3'/%3E%3Cpath d='M119.9 53.1C110.9 56.3 104.0 62.2 100.5 74.0'/%3E%3C/g%3E%3Cg class='eye'%3E%3Ccircle class='open' cx='131.3' cy='50.0' r='3.4' fill='%23050505'/%3E%3Cpath class='shut' opacity='0' fill='none' stroke='%23050505' stroke-width='1.7' stroke-linecap='round' d='M127.5 49.4Q131.3 52.6 135.1 49.4'/%3E%3C/g%3E%3Cg class='eye'%3E%3Ccircle class='open' cx='131.9' cy='40.0' r='3.4' fill='%23050505'/%3E%3Cpath class='shut' opacity='0' fill='none' stroke='%23050505' stroke-width='1.7' stroke-linecap='round' d='M128.1 39.4Q131.9 42.6 135.7 39.4'/%3E%3C/g%3E%3Cg fill='none' stroke='%23050505' stroke-linecap='round'%3E%3Cpath d='M119.0 50.5Q124.5 55.8 131.8 63.4' stroke-width='1.8'/%3E%3Cpath d='M160.5 62.9Q151.0 76.8 135.0 78.6' stroke-width='1.6' stroke-opacity='.45'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 0 15px rgba(253, 251, 211, 0.4));
+  z-index: 10;
+  animation: swim 9s ease-in-out infinite;
+}
+
+/* When catfish.js has drawn the fish (needed for the wink), hide the background copy */
+.uiverse-midnight-sky .moon:has(svg) {
+  background: none;
+}
+
+.uiverse-midnight-sky .moon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Winking: the open eye is swapped for a closed-eye curve for a moment */
+.uiverse-midnight-sky .moon .eye .open,
+.uiverse-midnight-sky .moon .eye .shut {
+  transition: opacity 60ms ease;
+}
+
+.uiverse-midnight-sky .moon .eye.winking .open {
+  opacity: 0;
+}
+
+.uiverse-midnight-sky .moon .eye.winking .shut {
+  opacity: 1;
+}
+
+/* Catfish drifting animation */
+@keyframes swim {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-3deg);
+  }
+  50% {
+    transform: translate(-10px, 8px) rotate(3deg);
+  }
+}
+
+/* Twinkle Animation */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* Shooting Star Animation - Using % instead of vw/vh */
+@keyframes shoot {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-35deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  15% {
+    transform: translateX(-1500px) translateY(1000px) rotate(-35deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-1500px) translateY(1000px) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+/* ===== Phone touch-ups ===== */
+@media (max-width: 600px) {
+  /* Glows sized to the screen width, with many eased stops so Android doesn't show banding */
+  .uiverse-midnight-sky .sky-canvas {
+    background:
+      radial-gradient(circle 85vw at 18% 42%, rgba(100, 70, 220, 0.5) 0%, rgba(100, 70, 220, 0.36) 25%, rgba(100, 70, 220, 0.21) 50%, rgba(100, 70, 220, 0.08) 72%, rgba(100, 70, 220, 0.02) 88%, rgba(100, 70, 220, 0.0) 100%),
+      radial-gradient(circle 80vw at 88% 78%, rgba(0, 160, 210, 0.4) 0%, rgba(0, 160, 210, 0.288) 25%, rgba(0, 160, 210, 0.168) 50%, rgba(0, 160, 210, 0.064) 72%, rgba(0, 160, 210, 0.016) 88%, rgba(0, 160, 210, 0.0) 100%),
+      radial-gradient(circle 60vw at 72% 12%, rgba(210, 70, 150, 0.28) 0%, rgba(210, 70, 150, 0.202) 25%, rgba(210, 70, 150, 0.118) 50%, rgba(210, 70, 150, 0.045) 72%, rgba(210, 70, 150, 0.011) 88%, rgba(210, 70, 150, 0.0) 100%),
+      #050505;
+  }
+
+  /* Smaller catfish, kept clear of the card */
+  .uiverse-midnight-sky .moon {
+    top: 8%;
+    right: 8%;
+    width: 80px;
+    height: 80px;
+  }
+
+  /* Denser stars so the sky doesn't look empty on a small screen */
+  .uiverse-midnight-sky .stars-1 { background-size: 140px 140px; }
+  .uiverse-midnight-sky .stars-2 { background-size: 210px 210px; }
+  .uiverse-midnight-sky .stars-3 { background-size: 280px 280px; }
+}

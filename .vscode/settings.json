@@ -1,0 +1,4 @@
+{
+  "liveServer.settings.root": "/web",
+  "files.exclude": { "**/build": true, "**/*.xcodeproj": true }
+}

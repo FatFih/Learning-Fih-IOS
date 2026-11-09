@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../shared/theme.js"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../shared/menu.css">
+    <link rel="stylesheet" href="../catfish.css">
+    <link rel="stylesheet" href="../shared/theme.css">
+    <script src="../shared/menu.js" defer></script>
+    <script src="main.js" defer></script>
+    <script src="../catfish.js" defer></script>
+    <title>Dolgozat Naptár</title>
+</head>
+<body>
+    <!-- From Uiverse.io by kiranmayee-abbireddy --> 
+    <div class="uiverse-midnight-sky">
+        <div class="sky-canvas">
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+  
+        <div class="meteor m1"></div>
+        <div class="meteor m2"></div>
+        <div class="meteor m3"></div>
+
+        <div class="moon"></div>
+        </div>
+    </div>
+
+    <!-- Top bar: the menu button sits on its left, the user on its right -->
+    <header class="navbar">
+        <div class="profile">
+            <span id="navUsername">Felhasználó</span>
+            <img class="avatar" src="../images/default-avatar.svg" alt="Profilkép">
+        </div>
+    </header>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+            aria-label="Menü" aria-expanded="false" aria-controls="sideMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+
+    <nav class="side-menu" id="sideMenu" aria-hidden="true">
+        <h2>Menü</h2>
+        <a href="../settings-page/settings-page.html">Beállítások</a>
+        <a href="#" data-action="logout">Kijelentkezés</a>
+    </nav>
+
+    <main class="center">
+        <h1 id="welcomeMessage">Learning-Fih</h1>
+
+        <!-- The nearest exam; tapping it opens that day in the calendar -->
+        <a class="exam-card" id="nextExam" href="../calendar-page/calendar-page.html" hidden>
+            <span class="exam-card-top">
+                <span class="exam-label">Következő dolgozat</span>
+                <span class="exam-countdown" id="nextExamCountdown"></span>
+            </span>
+            <span class="exam-subject" id="nextExamSubject"></span>
+            <span class="exam-when" id="nextExamWhen"></span>
+            <span class="exam-details" id="nextExamDetails"></span>
+            <span class="exam-more" id="nextExamMore"></span>
+        </a>
+        <p class="no-exam" id="noExam" hidden>Nincs közelgő dolgozat.</p>
+    </main>
+
+    <!-- Bottom bar: switches between the main pages (same look as the top bar) -->
+    <nav class="bottom-bar" aria-label="Oldalak">
+        <a href="../main-page/main.html" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+            <span>Főoldal</span>
+        </a>
+        <a href="../calendar-page/calendar-page.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 9h14v11H5z"/></svg>
+            <span>Naptár</span>
+        </a>
+    </nav>
+</body>
+</html>

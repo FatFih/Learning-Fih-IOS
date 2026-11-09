@@ -1,0 +1,256 @@
+/* Light theme (Beállítások → Téma → Világos).
+   theme.js puts data-theme="light" on <html>. This file is loaded LAST on every page,
+   and every rule starts with :root[data-theme="light"], so it wins over the dark page styles.
+   Dark: white outlines + dark glass on a night sky. Light: dark outlines + light glass on a day sky. */
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+/* ===== Sky: day instead of night ===== */
+:root[data-theme="light"],
+:root[data-theme="light"] .uiverse-midnight-sky {
+    background-color: #bfe3fa;
+}
+
+/* The body must stay see-through: with its own background it would paint over the sky
+   (the sky sits behind it at z-index -1), hiding the clouds' glow and the sun */
+:root[data-theme="light"] body {
+    background-color: transparent;
+}
+
+:root[data-theme="light"] .uiverse-midnight-sky .sky-canvas {
+    background:
+        radial-gradient(circle 70vmax at 15% 10%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 60%),
+        radial-gradient(circle 60vmax at 90% 90%, rgba(255, 214, 170, 0.55), rgba(255, 214, 170, 0) 60%),
+        radial-gradient(circle 45vmax at 85% 15%, rgba(255, 240, 190, 0.7), rgba(255, 240, 190, 0) 60%),
+        #bfe3fa;
+}
+
+/* No stars or meteors during the day */
+:root[data-theme="light"] .uiverse-midnight-sky .stars,
+:root[data-theme="light"] .uiverse-midnight-sky .meteor {
+    display: none;
+}
+
+:root[data-theme="light"] .uiverse-midnight-sky::after {
+    opacity: 0.04;
+}
+
+/* ===== The moon becomes a sun - the catfish stays, glowing golden with rays behind it ===== */
+:root[data-theme="light"] .uiverse-midnight-sky .moon {
+    filter: drop-shadow(0 0 16px rgba(255, 170, 0, 0.65));
+}
+
+/* catfish.js draws the fish with this light colour; make it golden */
+:root[data-theme="light"] .uiverse-midnight-sky .moon svg [fill="#fdfbd3"] {
+    fill: #ffb81c;
+}
+
+:root[data-theme="light"] .uiverse-midnight-sky .moon svg [stroke="#fdfbd3"] {
+    stroke: #ffb81c;
+}
+
+/* Sun glow + slowly turning rays behind the fish */
+:root[data-theme="light"] .uiverse-midnight-sky .moon::before {
+    content: "";
+    position: absolute;
+    inset: -45%;
+    z-index: -1;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, rgba(255, 214, 90, 0.95) 0 26%, rgba(255, 214, 90, 0) 46%),
+        repeating-conic-gradient(rgba(255, 186, 40, 0.6) 0deg 8deg, rgba(255, 186, 40, 0) 8deg 24deg);
+    -webkit-mask: radial-gradient(circle, black 32%, transparent 70%);
+    mask: radial-gradient(circle, black 32%, transparent 70%);
+    animation: sun-rays 40s linear infinite;
+}
+
+@keyframes sun-rays {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== Text ===== */
+:root[data-theme="light"] body,
+:root[data-theme="light"] button,
+:root[data-theme="light"] .side-menu a,
+:root[data-theme="light"] .bottom-bar a,
+:root[data-theme="light"] .exam-card,
+:root[data-theme="light"] #registrationMessage,
+:root[data-theme="light"] #BejelentkezésMessage {
+    color: #1b2333;
+}
+
+/* Quieter text (was semi-transparent white) */
+:root[data-theme="light"] .hint,
+:root[data-theme="light"] .empty,
+:root[data-theme="light"] .lesson-info .room,
+:root[data-theme="light"] .file-count,
+:root[data-theme="light"] .slot small,
+:root[data-theme="light"] .free-label,
+:root[data-theme="light"] .lesson.free .subject,
+:root[data-theme="light"] .detail-time,
+:root[data-theme="light"] .file-size,
+:root[data-theme="light"] .exam-details.muted,
+:root[data-theme="light"] .exam-label,
+:root[data-theme="light"] .exam-when,
+:root[data-theme="light"] .exam-more,
+:root[data-theme="light"] .no-exam {
+    color: rgba(27, 35, 51, 0.7);
+}
+
+:root[data-theme="light"] .error {
+    color: #d63031;
+}
+
+/* ===== Glass surfaces: light glass, dark outline ===== */
+:root[data-theme="light"] .navbar,
+:root[data-theme="light"] .side-menu,
+:root[data-theme="light"] .bottom-bar,
+:root[data-theme="light"] .menu-toggle,
+:root[data-theme="light"] .containter,
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .lesson,
+:root[data-theme="light"] .sheet,
+:root[data-theme="light"] .exam-card {
+    border-color: #1b2333;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(27, 35, 51, 0.15);
+}
+
+:root[data-theme="light"] .sheet {
+    background-color: rgba(255, 255, 255, 0.88);
+}
+
+/* Exams keep their red */
+:root[data-theme="light"] .exam-card,
+:root[data-theme="light"] .lesson.has-exam {
+    border-color: #ff6b6b;
+}
+
+:root[data-theme="light"] .avatar {
+    border-color: #1b2333;
+}
+
+:root[data-theme="light"] .menu-toggle span {
+    background: #1b2333;
+}
+
+/* ===== Pressed / current states ===== */
+:root[data-theme="light"] .menu-toggle:hover,
+:root[data-theme="light"] .menu-toggle:active,
+:root[data-theme="light"] .side-menu a:active,
+:root[data-theme="light"] .bottom-bar a:active,
+:root[data-theme="light"] .icon-btn:not(:disabled):active,
+:root[data-theme="light"] button.lesson:active,
+:root[data-theme="light"] .exam-card:active {
+    background-color: rgba(27, 35, 51, 0.1);
+}
+
+:root[data-theme="light"] .bottom-bar a[aria-current="page"],
+:root[data-theme="light"] .segmented button[aria-checked="true"] {
+    background-color: #1b2333;
+    color: white;
+}
+
+/* ===== Buttons (outlined, filled dark when pressed) ===== */
+:root[data-theme="light"] .containter button,
+:root[data-theme="light"] .btn {
+    border-color: #1b2333;
+    color: #1b2333;
+}
+
+@media (hover: hover) {
+    :root[data-theme="light"] .containter button:hover,
+    :root[data-theme="light"] .btn:not(:disabled):hover {
+        background-color: #1b2333;
+        color: white;
+    }
+}
+
+:root[data-theme="light"] .containter button:active,
+:root[data-theme="light"] .btn:not(:disabled):active,
+:root[data-theme="light"] .btn.primary {
+    background-color: rgba(27, 35, 51, 0.88);
+    color: white;
+}
+
+:root[data-theme="light"] .btn.confirm,
+:root[data-theme="light"] .icon-btn.confirm {
+    color: #d63031;
+    border-color: #d63031;
+}
+
+/* ===== Form fields ===== */
+:root[data-theme="light"] input,
+:root[data-theme="light"] select,
+:root[data-theme="light"] textarea {
+    border-color: rgba(27, 35, 51, 0.3);
+    background-color: rgba(27, 35, 51, 0.06);
+    color: #1b2333;
+}
+
+:root[data-theme="light"] select option {
+    background-color: white;
+}
+
+:root[data-theme="light"] :focus-visible {
+    outline-color: #1b2333;
+}
+
+/* ===== Calendar ===== */
+:root[data-theme="light"] .day.today .day-num {
+    border-color: #1b2333;
+}
+
+:root[data-theme="light"] .day.selected .day-num {
+    background-color: #1b2333;
+    color: white;
+}
+
+:root[data-theme="light"] .day.has-lessons::after {
+    background-color: rgba(27, 35, 51, 0.6);
+}
+
+:root[data-theme="light"] .day.has-exam::after {
+    background-color: #ff6b6b;
+}
+
+:root[data-theme="light"] .lesson-time {
+    border-right-color: #1b2333;
+    background-color: rgba(27, 35, 51, 0.07);
+}
+
+:root[data-theme="light"] .lesson.has-exam .lesson-time {
+    border-right-color: #ff6b6b;
+}
+
+:root[data-theme="light"] .lesson.free {
+    border-color: rgba(27, 35, 51, 0.4);
+    background-color: transparent;
+    box-shadow: none;
+}
+
+:root[data-theme="light"] .lesson.free .lesson-time {
+    border-right-color: rgba(27, 35, 51, 0.4);
+    background-color: transparent;
+}
+
+:root[data-theme="light"] .lesson.current {
+    box-shadow: 0 0 0 2px #1b2333, 0 0 22px rgba(27, 35, 51, 0.35);
+}
+
+:root[data-theme="light"] .lesson.current .lesson-time {
+    background-color: rgba(27, 35, 51, 0.16);
+}
+
+:root[data-theme="light"] .edit-row,
+:root[data-theme="light"] .file {
+    border-color: rgba(27, 35, 51, 0.3);
+}
+
+:root[data-theme="light"] .edit-row.too-late {
+    border-color: #d63031;
+}

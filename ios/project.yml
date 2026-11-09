@@ -1,0 +1,52 @@
+# XcodeGen spec: the build Mac turns this into DolgozatNaptar.xcodeproj
+# (xcodegen generate --spec ios/project.yml). The .xcodeproj itself is not kept in git.
+name: DolgozatNaptar
+
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "15.0"
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  DolgozatNaptar:
+    type: application
+    platform: iOS
+    sources:
+      # Swift code + app icon
+      - path: DolgozatNaptar
+      # The pages, copied into the app as the "web" folder (served by AppSchemeHandler)
+      - path: ../web
+        type: folder
+        buildPhase: resources
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Dolgozat Naptár
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIViewControllerBasedStatusBarAppearance: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.dolgozatnaptar
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "5.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+
+schemes:
+  DolgozatNaptar:
+    build:
+      targets:
+        DolgozatNaptar: all

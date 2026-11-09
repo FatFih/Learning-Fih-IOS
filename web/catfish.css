@@ -1,0 +1,59 @@
+/* The catfish that replaces the moon on every page.
+   Each page has <div class="moon"></div> in its sky; catfish.js draws the fish inside it.
+   This file is loaded AFTER the page's own css, so it replaces the old moon styles. */
+
+.uiverse-midnight-sky .moon {
+  position: absolute;
+  top: 15%;
+  right: 12%;
+  width: 110px;
+  height: 110px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0 15px rgba(253, 251, 211, 0.4));
+  z-index: 10;
+  animation: swim 9s ease-in-out infinite;
+}
+
+.uiverse-midnight-sky .moon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Winking: the open eye is swapped for a closed-eye curve for a moment */
+.uiverse-midnight-sky .moon .eye .open,
+.uiverse-midnight-sky .moon .eye .shut {
+  transition: opacity 60ms ease;
+}
+
+.uiverse-midnight-sky .moon .eye.winking .open {
+  opacity: 0;
+}
+
+.uiverse-midnight-sky .moon .eye.winking .shut {
+  opacity: 1;
+}
+
+/* Catfish drifting animation */
+@keyframes swim {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-3deg);
+  }
+  50% {
+    transform: translate(-10px, 8px) rotate(3deg);
+  }
+}
+
+/* Smaller catfish on phones, kept clear of the card */
+@media (max-width: 600px) {
+  .uiverse-midnight-sky .moon {
+    top: 8%;
+    right: 8%;
+    width: 80px;
+    height: 80px;
+    box-shadow: none;
+  }
+}

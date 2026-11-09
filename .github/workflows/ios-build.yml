@@ -1,0 +1,43 @@
+# Builds the iPhone app on a GitHub Mac on every push to main (or by hand: Actions → iOS build → Run workflow).
+# The result is an unsigned .ipa under the run's "Artifacts"; Sideloadly signs it with your Apple ID when installing.
+name: iOS build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Create the Xcode project
+        run: xcodegen generate --spec ios/project.yml
+
+      - name: Build the app (unsigned)
+        run: |
+          xcodebuild build \
+            -project ios/DolgozatNaptar.xcodeproj \
+            -scheme DolgozatNaptar \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+      - name: Package as .ipa
+        run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/DolgozatNaptar.app Payload/
+          zip -qry DolgozatNaptar.ipa Payload
+
+      - name: Upload the .ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: DolgozatNaptar-ipa
+          path: DolgozatNaptar.ipa

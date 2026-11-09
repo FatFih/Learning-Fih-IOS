@@ -1,0 +1,245 @@
+/* Top bar + side menu shared by every page after login (main page, calendar).
+   Load it together with ../shared/menu.js. */
+
+/* Sideways swipes open / close the menu (menu.js) */
+body {
+    touch-action: pan-y;
+}
+
+/* ----- Top bar ----- */
+/* Same look as the side menu: white outline, slightly dark, blurred */
+.navbar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 5;
+    height: 64px;
+    box-sizing: border-box;
+    padding: 0 12px 0 74px; /* room on the left for the menu button */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    border: 2px solid white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 255, 255, 0.08);
+    background-color: rgba(30, 30, 30, 0.4);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+/* Long usernames get cut off with "..." instead of pushing the picture out */
+#navUsername {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+}
+
+/* ----- Hamburger button ----- */
+/* Resets the global `button` style (border, width, margin) for this button */
+.menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 30;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 9px;
+    border: 2px solid white;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+
+    /* Slightly dark, blurred glass behind the lines */
+    background-color: rgba(30, 30, 30, 0.4);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-toggle span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: white;
+    border-radius: 2px;
+    transition: transform 250ms ease, opacity 200ms ease;
+}
+
+/* Turn the three lines into an X when open */
+.menu-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(9.5px) rotate(45deg);
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-9.5px) rotate(-45deg);
+}
+
+/* Override the white hover/press fill from the global button style */
+.menu-toggle:hover,
+.menu-toggle:active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ----- Side panel ----- */
+/* Floating card with a white outline, slightly dark and blurred (like the login card) */
+.side-menu {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+    z-index: 20;
+    width: min(280px, 80vw);
+    box-sizing: border-box;
+    padding: 76px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    border: 2px solid white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 255, 255, 0.08);
+    background-color: rgba(30, 30, 30, 0.4);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+
+    /* Hidden just past the left edge (its width + the 10px gap) */
+    transform: translateX(calc(-100% - 20px));
+    transition: transform 300ms ease;
+    touch-action: pan-y; /* sideways swipes are handled in menu.js */
+}
+
+.side-menu.open {
+    transform: translateX(0);
+}
+
+.side-menu h2 {
+    margin: 0 0 12px;
+    font-size: 1.3rem;
+}
+
+.side-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 6px;
+    transition: background-color 150ms ease;
+}
+
+.side-menu a:hover,
+.side-menu a:active {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* The page you are on */
+.side-menu a[aria-current="page"] {
+    font-weight: 700;
+    box-shadow: inset 3px 0 0 currentColor;
+}
+
+
+/* ----- Dark backdrop behind the open menu ----- */
+.menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+    touch-action: pan-y; /* sideways swipes are handled in menu.js */
+}
+
+.menu-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ----- Bottom bar ----- */
+/* Same look as the top bar; switches between the main pages */
+.bottom-bar {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 5;
+    height: 64px;
+    box-sizing: border-box;
+    padding: 6px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+
+    border: 2px solid white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 255, 255, 0.08);
+    background-color: rgba(30, 30, 30, 0.4);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+}
+
+.bottom-bar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.bottom-bar svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.bottom-bar a:active {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* The page you are on */
+.bottom-bar a[aria-current="page"] {
+    background-color: white;
+    color: black;
+    font-weight: 700;
+}
+
+/* ----- Catfish below the top bar ----- */
+/* The top bar only exists on this page, so the fish is moved down here.
+   The extra "body" is needed because catfish.css loads after this file.
+   The bar ends at 74px (10px offset + 64px height). */
+body .uiverse-midnight-sky .moon {
+    top: max(15%, 100px);
+}
+
+@media (max-width: 600px) {
+    body .uiverse-midnight-sky .moon {
+        top: 100px;
+    }
+}

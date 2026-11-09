@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../shared/theme.js"></script>
+    <link rel="stylesheet" href="calendar-page.css">
+    <link rel="stylesheet" href="../shared/menu.css">
+    <link rel="stylesheet" href="../catfish.css">
+    <link rel="stylesheet" href="../shared/theme.css">
+    <script src="../shared/menu.js" defer></script>
+    <script src="calendar-page.js" defer></script>
+    <script src="../catfish.js" defer></script>
+    <title>Naptár</title>
+</head>
+<body>
+    <!-- From Uiverse.io by kiranmayee-abbireddy -->
+    <div class="uiverse-midnight-sky">
+        <div class="sky-canvas">
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+
+        <div class="meteor m1"></div>
+        <div class="meteor m2"></div>
+        <div class="meteor m3"></div>
+
+        <div class="moon"></div>
+        </div>
+    </div>
+
+    <!-- Top bar: the menu button sits on its left, the user on its right -->
+    <header class="navbar">
+        <div class="profile">
+            <span id="navUsername">Felhasználó</span>
+            <img class="avatar" src="../images/default-avatar.svg" alt="Profilkép">
+        </div>
+    </header>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+            aria-label="Menü" aria-expanded="false" aria-controls="sideMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+
+    <nav class="side-menu" id="sideMenu" aria-hidden="true">
+        <h2>Menü</h2>
+        <a href="../settings-page/settings-page.html">Beállítások</a>
+        <a href="#" data-action="logout">Kijelentkezés</a>
+    </nav>
+
+    <main class="calendar">
+        <!-- Week strip (like Kréta): H K Sze Cs P Szo V with the dates -->
+        <section class="card week">
+            <div class="week-header">
+                <button class="icon-btn" id="prevWeek" type="button" aria-label="Előző hét">‹</button>
+                <span id="weekLabel"></span>
+                <button class="icon-btn" id="nextWeek" type="button" aria-label="Következő hét">›</button>
+            </div>
+            <div class="week-days" id="weekDays"></div>
+        </section>
+
+        <h2 class="day-title" id="dayTitle"></h2>
+        <div class="lesson-list" id="lessonList"></div>
+
+        <button class="btn" id="editDayBtn" type="button">Órarend szerkesztése</button>
+    </main>
+
+    <!-- Bottom bar: switches between the main pages (same look as the top bar) -->
+    <nav class="bottom-bar" aria-label="Oldalak">
+        <a href="../main-page/main.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+            <span>Főoldal</span>
+        </a>
+        <a href="../calendar-page/calendar-page.html" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 9h14v11H5z"/></svg>
+            <span>Naptár</span>
+        </a>
+    </nav>
+
+    <!-- Timetable editor for one day of the week -->
+    <div class="modal" id="editor" hidden>
+        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+            <h2 id="editorTitle"></h2>
+            <label class="first-period">
+                Első óra
+                <select id="firstPeriod"></select>
+            </label>
+            <p class="hint">Az órák a megadás sorrendjében kapják meg az időpontokat.</p>
+
+            <ol class="edit-rows" id="editRows"></ol>
+
+            <div class="row-buttons">
+                <button class="btn" id="addLesson" type="button">+ Óra</button>
+                <button class="btn" id="addFree" type="button">+ Lyukasóra</button>
+            </div>
+            <p class="error" id="editorError" hidden></p>
+
+            <div class="sheet-actions">
+                <button class="btn" id="cancelEdit" type="button">Mégse</button>
+                <button class="btn primary" id="saveEdit" type="button">Mentés</button>
+            </div>
+        </div>
+    </div>
+    <datalist id="subjectList"></datalist>
+
+    <!-- Details of one lesson + the subject's files -->
+    <div class="modal" id="details" hidden>
+        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="detailSubject">
+            <button class="icon-btn close-btn" id="closeDetails" type="button" aria-label="Bezárás">✕</button>
+            <p class="detail-time" id="detailTime"></p>
+            <h2 id="detailSubject"></h2>
+            <p class="detail-room" id="detailRoom"></p>
+
+            <!-- Exam on this class on this date -->
+            <h3>Dolgozat</h3>
+            <div id="examView" hidden>
+                <p class="exam-details" id="examDetails"></p>
+                <p class="hint" id="examReminder"></p>
+                <div class="row-buttons">
+                    <button class="btn" id="editExam" type="button">Szerkesztés</button>
+                    <button class="btn" id="deleteExam" type="button">Törlés</button>
+                </div>
+            </div>
+            <div id="examForm" hidden>
+                <textarea id="examInput" rows="3" maxlength="500"
+                          placeholder="Témakör, tudnivalók (nem kötelező)"></textarea>
+                <div class="row-buttons">
+                    <button class="btn" id="cancelExam" type="button">Mégse</button>
+                    <button class="btn primary" id="saveExam" type="button">Mentés</button>
+                </div>
+            </div>
+            <div id="examEmpty">
+                <p class="hint">Ha dolgozatot adsz hozzá, 3 nappal előtte értesítést kapsz.</p>
+                <button class="btn" id="addExam" type="button">+ Dolgozat hozzáadása</button>
+            </div>
+            <p class="error" id="examError" hidden></p>
+
+            <h3>Fájlok</h3>
+            <p class="hint">PDF, DOCX, PPT vagy PPTX, legfeljebb 25 MB. A fájlok a tantárgyhoz tartoznak, így a tantárgy minden óráján megjelennek.</p>
+            <ul class="file-list" id="fileList"></ul>
+            <p class="error" id="fileError" hidden></p>
+            <button class="btn" id="uploadBtn" type="button">Fájl feltöltése</button>
+        </div>
+    </div>
+</body>
+</html>
