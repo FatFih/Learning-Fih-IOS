@@ -1,33 +1,22 @@
-# Learning-Fih (iPhone)
+# Learning-Fih
 
-Az Android-os dolgozat naptár iPhone-os változata, diákok számára.
-
+Egy IOS telefonokra készített dolgozat naptár a diákok számára.
 ## Funkciók
 
 - Saját naptár saját órarenddel
 - Dolgozat mentése
-- Dolgozat előtti figyelmeztető értesítés
-- Sötét és világos téma
+- Dolgozat elötti figyelmeztető értesítés
 - Teljesen lokálisan működik
+- Sötét, világos mód
 
-## Felépítés
 
-| Mappa | Tartalom |
-| --- | --- |
-| `web/` | Az oldalak (HTML, CSS, JavaScript) – ugyanazok, mint az Android-os változatban |
-| `ios/DolgozatNaptar/` | A Swift kód: adatbázis, bejelentkezés, értesítések, fájlok |
-| `ios/project.yml` | Ebből készíti el az Xcode-projektet a buildgép (XcodeGen) |
-| `.github/workflows/ios-build.yml` | A GitHub Actions build, ami az `.ipa` fájlt készíti |
 
-## Build
+## Telepítés
 
-Minden `main` ágra történő push után a GitHub Actions egy Mac gépen lefordítja az alkalmazást.
-Az eredmény a futás oldalán, az **Artifacts** résznél tölthető le (`DolgozatNaptar-ipa`, benne a `DolgozatNaptar.ipa`).
+Ezen a <a href="https://github.com/FatFih/Learning-Fih-IOS/releases" target="_blank">linken</a> keresztul töltse le a legújabb verzióját az applikációnak (a .ipa file-t).
 
-## Telepítés iPhone-ra (Windowsról)
+### Windows:
+Mivel ez az applikáció még nem elérhető az App Store-on ezért le kell tölteni innen és a Sideloadly segítségével kell rá telepíteni egy olyan IOS készülékre amin BE van kapcsolva a developer mode (ez egy kötelező lépés). 
 
-1. Telepítsd a [Sideloadly](https://sideloadly.io/) programot és az iTunes-t (a Sideloadly oldala leírja, melyik változat kell).
-2. Csatlakoztasd az iPhone-t USB-n, és engedélyezd a „Megbízol ebben a számítógépben?” kérdést.
-3. Húzd az `.ipa` fájlt a Sideloadly-be, add meg az Apple ID-dat, és nyomj a **Start** gombra.
-4. Az iPhone-on kapcsold be: **Beállítások → Adatvédelem és biztonság → Fejlesztői mód** (újraindítás után erősítsd meg).
-5. Ingyenes Apple ID-val az alkalmazás 7 napig működik, utána ugyanígy újra kell telepíteni.
+### MacOS:
+USB csatlakoztatással kell hozzákötni a Mac eszközhöz és az Apple Configurator dologgal kell áttelepíteni.
