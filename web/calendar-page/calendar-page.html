@@ -29,7 +29,6 @@
         </div>
     </div>
 
-    <!-- Top bar: the menu button sits on its left, the user on its right -->
     <header class="navbar">
         <div class="profile">
             <span id="navUsername">Felhasználó</span>
@@ -53,7 +52,6 @@
     </nav>
 
     <main class="calendar">
-        <!-- Week strip (like Kréta): H K Sze Cs P Szo V with the dates -->
         <section class="card week">
             <div class="week-header">
                 <button class="icon-btn" id="prevWeek" type="button" aria-label="Előző hét">‹</button>
@@ -69,7 +67,6 @@
         <button class="btn" id="editDayBtn" type="button">Órarend szerkesztése</button>
     </main>
 
-    <!-- Bottom bar: switches between the main pages (same look as the top bar) -->
     <nav class="bottom-bar" aria-label="Oldalak">
         <a href="../main-page/main.html">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
@@ -81,7 +78,6 @@
         </a>
     </nav>
 
-    <!-- Timetable editor for one day of the week -->
     <div class="modal" id="editor" hidden>
         <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
             <h2 id="editorTitle"></h2>
@@ -107,7 +103,6 @@
     </div>
     <datalist id="subjectList"></datalist>
 
-    <!-- Details of one lesson + the subject's files -->
     <div class="modal" id="details" hidden>
         <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="detailSubject">
             <button class="icon-btn close-btn" id="closeDetails" type="button" aria-label="Bezárás">✕</button>
@@ -115,7 +110,6 @@
             <h2 id="detailSubject"></h2>
             <p class="detail-room" id="detailRoom"></p>
 
-            <!-- Exam on this class on this date -->
             <h3>Dolgozat</h3>
             <div id="examView" hidden>
                 <p class="exam-details" id="examDetails"></p>

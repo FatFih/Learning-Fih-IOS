@@ -1,13 +1,7 @@
-/* Top bar + side menu shared by every page after login (main page, calendar).
-   Load it together with ../shared/menu.js. */
-
-/* Sideways swipes open / close the menu (menu.js) */
 body {
     touch-action: pan-y;
 }
 
-/* ----- Top bar ----- */
-/* Same look as the side menu: white outline, slightly dark, blurred */
 .navbar {
     position: fixed;
     top: 10px;
@@ -16,7 +10,7 @@ body {
     z-index: 5;
     height: 64px;
     box-sizing: border-box;
-    padding: 0 12px 0 74px; /* room on the left for the menu button */
+    padding: 0 12px 0 74px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -36,7 +30,6 @@ body {
     min-width: 0;
 }
 
-/* Long usernames get cut off with "..." instead of pushing the picture out */
 #navUsername {
     font-weight: 600;
     white-space: nowrap;
@@ -53,8 +46,6 @@ body {
     object-fit: cover;
 }
 
-/* ----- Hamburger button ----- */
-/* Resets the global `button` style (border, width, margin) for this button */
 .menu-toggle {
     position: fixed;
     top: 20px;
@@ -69,7 +60,6 @@ body {
     box-sizing: border-box;
     display: flex;
 
-    /* Slightly dark, blurred glass behind the lines */
     background-color: rgba(30, 30, 30, 0.4);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
@@ -86,7 +76,6 @@ body {
     transition: transform 250ms ease, opacity 200ms ease;
 }
 
-/* Turn the three lines into an X when open */
 .menu-toggle[aria-expanded="true"] span:nth-child(1) {
     transform: translateY(9.5px) rotate(45deg);
 }
@@ -97,14 +86,11 @@ body {
     transform: translateY(-9.5px) rotate(-45deg);
 }
 
-/* Override the white hover/press fill from the global button style */
 .menu-toggle:hover,
 .menu-toggle:active {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* ----- Side panel ----- */
-/* Floating card with a white outline, slightly dark and blurred (like the login card) */
 .side-menu {
     position: fixed;
     top: 10px;
@@ -125,10 +111,9 @@ body {
     -webkit-backdrop-filter: blur(30px) saturate(180%);
     backdrop-filter: blur(30px) saturate(180%);
 
-    /* Hidden just past the left edge (its width + the 10px gap) */
     transform: translateX(calc(-100% - 20px));
     transition: transform 300ms ease;
-    touch-action: pan-y; /* sideways swipes are handled in menu.js */
+    touch-action: pan-y;
 }
 
 .side-menu.open {
@@ -153,14 +138,11 @@ body {
     background-color: rgba(255, 255, 255, 0.12);
 }
 
-/* The page you are on */
 .side-menu a[aria-current="page"] {
     font-weight: 700;
     box-shadow: inset 3px 0 0 currentColor;
 }
 
-
-/* ----- Dark backdrop behind the open menu ----- */
 .menu-backdrop {
     position: fixed;
     inset: 0;
@@ -169,7 +151,7 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: opacity 300ms ease;
-    touch-action: pan-y; /* sideways swipes are handled in menu.js */
+    touch-action: pan-y;
 }
 
 .menu-backdrop.open {
@@ -177,8 +159,6 @@ body {
     pointer-events: auto;
 }
 
-/* ----- Bottom bar ----- */
-/* Same look as the top bar; switches between the main pages */
 .bottom-bar {
     position: fixed;
     left: 10px;
@@ -223,17 +203,12 @@ body {
     background-color: rgba(255, 255, 255, 0.12);
 }
 
-/* The page you are on */
 .bottom-bar a[aria-current="page"] {
     background-color: white;
     color: black;
     font-weight: 700;
 }
 
-/* ----- Catfish below the top bar ----- */
-/* The top bar only exists on this page, so the fish is moved down here.
-   The extra "body" is needed because catfish.css loads after this file.
-   The bar ends at 74px (10px offset + 64px height). */
 body .uiverse-midnight-sky .moon {
     top: max(15%, 100px);
 }

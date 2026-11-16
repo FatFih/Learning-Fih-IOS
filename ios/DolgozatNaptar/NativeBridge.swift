@@ -3,17 +3,12 @@ import UIKit
 import UniformTypeIdentifiers
 import WebKit
 
-// The iOS version of WebAppInterface.kt. The pages call window.Android.<method>(callId, ...args);
-// the shim in WebViewController turns that into a message here, and the answer goes back to the
-// page through window.onNativeResult(callId, result) - the same protocol as on Android.
 final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDelegate, QLPreviewControllerDataSource {
     private weak var controller: WebViewController?
     private weak var webView: WKWebView?
     private let db = Database.shared
 
-    // The file picker answers later, so remember who asked
     private var pendingPick: (callId: String, subject: String)?
-    // The file shown by Quick Look
     private var previewItem: PreviewItem?
 
     private static let maxFileSize = 25 * 1024 * 1024
@@ -37,13 +32,10 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         super.init()
     }
 
-    // ===== Messages from the pages =====
-
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let body = message.body as? [String: Any], let method = body["method"] as? String else { return }
         let values = body["args"] as? [Any] ?? []
 
-        // The only call without a callId: theme.js on every page
         if method == "setLightTheme" {
             controller?.lightTheme = Arguments(values).bool(0)
             return
@@ -72,8 +64,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         }
     }
 
-    // ===== Users =====
-
     private func normalize(_ username: String) -> String {
         username.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
@@ -84,7 +74,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         let password = args.string(1)
         guard !username.isEmpty, !password.isEmpty else { return reply(callId, false) }
 
-        // Hashing takes a moment, so not on the main thread
         DispatchQueue.global(qos: .userInitiated).async {
             let digest = PasswordUtil.createDigest(password)
             DispatchQueue.main.async {
@@ -92,7 +81,7 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
                     "INSERT INTO users (username, displayName, passwordSalt, passwordHash) VALUES (?, ?, ?, ?)",
                     [username, displayName, digest.salt, digest.hash]
                 )
-                self.reply(callId, created) // false = username already taken
+                self.reply(callId, created)
             }
         }
     }
@@ -117,7 +106,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         }
     }
 
-    // {username, displayName} or null (iOS replacement for Android.isLoggedIn / getUsername)
     private func getSession(_ callId: String) {
         guard let username = AppSettings.username else { return reply(callId, NSNull()) }
         let displayName = AppSettings.displayName.flatMap { $0.isEmpty ? nil : $0 } ?? username
@@ -129,13 +117,10 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         reply(callId, true)
     }
 
-    // ===== Timetable =====
-
     private func subjectKey(_ subject: String) -> String {
         subject.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 
-    // {"lessons": [...], "fileCounts": {...}, "exams": [...], "reminderTime": "13:00"}
     private func getTimetable(_ callId: String) {
         guard let user = AppSettings.username else { return reply(callId, NSNull()) }
         let lessons = db.query(
@@ -158,7 +143,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         ])
     }
 
-    // args: day (1-7), lessons JSON [{period, subject, room}] - replaces everything on that day
     private func saveDay(_ callId: String, _ args: Arguments) {
         guard let user = AppSettings.username,
               let day = args.int(0), (1...7).contains(day),
@@ -190,10 +174,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         reply(callId, saved)
     }
 
-    // ===== Exams =====
-
-    // args: date ("2026-11-13"), period, subject, details. Adds the exam (or updates the one
-    // already on that class that day) and schedules its reminders.
     private func saveExam(_ callId: String, _ args: Arguments) {
         let date = args.string(0)
         let subject = String(args.string(2).trimmingCharacters(in: .whitespacesAndNewlines).prefix(60))
@@ -220,7 +200,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
             examId = db.lastInsertId
         }
 
-        // The reminders need notification permission
         ExamReminders.requestPermission()
         ExamReminders.schedule(examId: examId, date: date, period: period, subject: subject, details: details)
         reply(callId, true)
@@ -241,9 +220,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         reply(callId, saved)
     }
 
-    // ===== Files =====
-
-    // [{id, name, size}] for one subject
     private func getFiles(_ callId: String, _ args: Arguments) {
         guard let user = AppSettings.username else { return reply(callId, [Any]()) }
         reply(callId, db.query(
@@ -252,8 +228,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         ))
     }
 
-    // Opens the system file picker (PDF, DOCX, PPT, PPTX only). The answer is sent when a file is
-    // picked: {"ok": true} / {"ok": false, "error": "..."} / {"ok": false, "cancelled": true}
     private func pickFile(_ callId: String, _ args: Arguments) {
         guard let controller = controller, AppSettings.username != nil else {
             return replyPick(callId, cancelled: true)
@@ -287,10 +261,8 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         replyPick(pick.callId, cancelled: true)
     }
 
-    // Copies the picked file into the app's own folder; returns an error message or nil
     private func importFile(_ url: URL, user: String, subject: String) -> String? {
         let fileExtension = url.pathExtension.lowercased()
-        // The picker filters the types, but some file providers ignore that, so check again
         guard let mimeType = Self.mimeTypes[fileExtension] else {
             return "Csak PDF, DOCX, PPT vagy PPTX fájl tölthető fel."
         }
@@ -320,7 +292,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         reply(callId, result)
     }
 
-    // Shows the file with Quick Look (PDF, Word and PowerPoint files are all supported)
     private func openFile(_ callId: String, _ args: Arguments) {
         guard let user = AppSettings.username, let id = args.int(0), let controller = controller,
               let file = db.query(
@@ -358,9 +329,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         previewItem!
     }
 
-    // ===== Answers to the page =====
-
-    // value: Bool, NSNull, or arrays / dictionaries of strings and numbers
     private func reply(_ callId: String, _ value: Any) {
         guard callId.range(of: "^[0-9]{1,10}$", options: .regularExpression) != nil else { return }
         let json: String
@@ -371,7 +339,7 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
         } else if JSONSerialization.isValidJSONObject(value),
                   let data = try? JSONSerialization.data(withJSONObject: value),
                   let text = String(data: data, encoding: .utf8) {
-            json = text // JSON is valid JavaScript, so it can be passed in directly
+            json = text
         } else {
             json = "null"
         }
@@ -379,7 +347,6 @@ final class NativeBridge: NSObject, WKScriptMessageHandler, UIDocumentPickerDele
     }
 }
 
-// The arguments the page sent (strings, numbers and booleans from JavaScript)
 private struct Arguments {
     let values: [Any]
 
@@ -404,7 +371,6 @@ private struct Arguments {
     }
 }
 
-// A file for Quick Look, shown with its original name instead of the stored one
 private final class PreviewItem: NSObject, QLPreviewItem {
     let previewItemURL: URL?
     let previewItemTitle: String?

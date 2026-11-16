@@ -10,8 +10,6 @@ h1 {
     margin: 0 20px 5px;
 }
 
-/* Welcome text + exams in the middle of the screen. With many exams the page grows and
-   scrolls; the padding keeps it clear of the top bar (ends at 74px) and the bottom bar. */
 .center {
     box-sizing: border-box;
     min-height: 100vh;
@@ -23,8 +21,6 @@ h1 {
     align-items: center;
 }
 
-/* ----- Upcoming exams ----- */
-/* One exam: a single big card. More: two per row, nearest first (top left, top right, ...) */
 .exam-grid {
     box-sizing: border-box;
     width: min(400px, calc(100vw - 40px));
@@ -50,7 +46,6 @@ h1 {
     opacity: 0.75;
 }
 
-/* Same look as the cards on the other pages, with the exam red as the accent */
 .exam-card {
     box-sizing: border-box;
     min-width: 0;
@@ -114,7 +109,6 @@ h1 {
     overflow-wrap: anywhere;
 }
 
-/* Smaller cards when two sit side by side */
 .exam-grid:not(.single) .exam-card {
     padding: 12px;
 }
@@ -132,7 +126,6 @@ h1 {
     font-size: 0.85rem;
 }
 
-/* Narrow cards: the period on its own line instead of breaking the date line */
 .exam-grid:not(.single) .exam-period {
     display: block;
 }
@@ -141,7 +134,6 @@ h1 {
     content: none;
 }
 
-/* Long notes are cut after 3 lines in the grid (the calendar shows them in full) */
 .exam-grid:not(.single) .exam-details {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -159,8 +151,6 @@ button:focus-visible {
     outline-offset: 3px;
 }
 
-/* Same button look as the login / registration pages.
-   There is no card here, so the width is capped and the buttons are centred */
 button {
     display: block;
     font: inherit;
@@ -198,7 +188,7 @@ button:active {
   height: 100%;
   min-height: 0;
   height: 100vh;
-  height: 100lvh; /* covers the area under Android's toolbar/gesture bar */
+  height: 100lvh;
   overflow: hidden;
   background-color: #050505;
   z-index: -1;
@@ -207,7 +197,6 @@ button:active {
   justify-content: center;
 }
 
-/* Fine grain over the whole sky: hides the stepped "rings" (gradient banding) on Android */
 .uiverse-midnight-sky::after {
   content: "";
   position: absolute;
@@ -217,7 +206,6 @@ button:active {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Base Sky Layer (with large soft glows for the acrylic blur to pick up) */
 .uiverse-midnight-sky .sky-canvas {
   width: 100%;
   height: 100%;
@@ -230,7 +218,6 @@ button:active {
     #050505;
 }
 
-/* Generic star layer style */
 .uiverse-midnight-sky .stars {
   position: absolute;
   inset: 0;
@@ -238,7 +225,6 @@ button:active {
   pointer-events: none;
 }
 
-/* Layer 1: Small fast twinkling stars - High density */
 .uiverse-midnight-sky .stars-1 {
   background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent),
     radial-gradient(1px 1px at 30% 20%, #fff, transparent),
@@ -249,7 +235,6 @@ button:active {
   animation: twinkle 3s ease-in-out infinite;
 }
 
-/* Layer 2: Medium slower twinkling stars */
 .uiverse-midnight-sky .stars-2 {
   background-image: radial-gradient(1.5px 1.5px at 20% 40%, #fff, transparent),
     radial-gradient(1.5px 1.5px at 60% 85%, #fff, transparent),
@@ -258,7 +243,6 @@ button:active {
   animation: twinkle 5s ease-in-out infinite 1s;
 }
 
-/* Layer 3: Larger, very slow twinkling stars */
 .uiverse-midnight-sky .stars-3 {
   background-image: radial-gradient(2px 2px at 40% 70%, #fff, transparent),
     radial-gradient(2px 2px at 10% 80%, #fff, transparent),
@@ -267,7 +251,6 @@ button:active {
   animation: twinkle 7s ease-in-out infinite 2s;
 }
 
-/* Meteor / Shooting Star Layer */
 .uiverse-midnight-sky .meteor {
   position: absolute;
   width: 2px;
@@ -279,7 +262,6 @@ button:active {
   pointer-events: none;
 }
 
-/* Meteor Tail */
 .uiverse-midnight-sky .meteor::after {
   content: "";
   position: absolute;
@@ -290,7 +272,6 @@ button:active {
   background: linear-gradient(90deg, #fff, transparent);
 }
 
-/* Meteor Instances with staggered starts */
 .uiverse-midnight-sky .m1 {
   top: 10%;
   left: 110%;
@@ -307,7 +288,6 @@ button:active {
   animation: shoot 10s linear infinite 2s;
 }
 
-/* The Catfish (replaces the moon; the HTML element still has class "moon") */
 .uiverse-midnight-sky .moon {
   position: absolute;
   top: 15%;
@@ -322,7 +302,6 @@ button:active {
   animation: swim 9s ease-in-out infinite;
 }
 
-/* When catfish.js has drawn the fish (needed for the wink), hide the background copy */
 .uiverse-midnight-sky .moon:has(svg) {
   background: none;
 }
@@ -333,7 +312,6 @@ button:active {
   height: 100%;
 }
 
-/* Winking: the open eye is swapped for a closed-eye curve for a moment */
 .uiverse-midnight-sky .moon .eye .open,
 .uiverse-midnight-sky .moon .eye .shut {
   transition: opacity 60ms ease;
@@ -347,7 +325,6 @@ button:active {
   opacity: 1;
 }
 
-/* Catfish drifting animation */
 @keyframes swim {
   0%,
   100% {
@@ -358,7 +335,6 @@ button:active {
   }
 }
 
-/* Twinkle Animation */
 @keyframes twinkle {
   0%,
   100% {
@@ -369,7 +345,6 @@ button:active {
   }
 }
 
-/* Shooting Star Animation - Using % instead of vw/vh */
 @keyframes shoot {
   0% {
     transform: translateX(0) translateY(0) rotate(-35deg);
@@ -388,7 +363,6 @@ button:active {
   }
 }
 
-/* ===== Phone touch-ups ===== */
 @media (max-width: 600px) {
   h1 {
     font-size: 1.7rem;
@@ -396,10 +370,9 @@ button:active {
 
   .containter {
     padding: 24px 20px;
-    background-color: rgba(30, 30, 30, 0.4); /* a bit more tint so text stays readable */
+    background-color: rgba(30, 30, 30, 0.4);
   }
 
-  /* Glows sized to the screen width, with many eased stops so Android doesn't show banding */
   .uiverse-midnight-sky .sky-canvas {
     background:
       radial-gradient(circle 85vw at 18% 42%, rgba(100, 70, 220, 0.5) 0%, rgba(100, 70, 220, 0.36) 25%, rgba(100, 70, 220, 0.21) 50%, rgba(100, 70, 220, 0.08) 72%, rgba(100, 70, 220, 0.02) 88%, rgba(100, 70, 220, 0.0) 100%),
@@ -408,7 +381,6 @@ button:active {
       #050505;
   }
 
-  /* Smaller catfish, kept clear of the card */
   .uiverse-midnight-sky .moon {
     top: 8%;
     right: 8%;
@@ -416,7 +388,6 @@ button:active {
     height: 80px;
   }
 
-  /* Denser stars so the sky doesn't look empty on a small screen */
   .uiverse-midnight-sky .stars-1 { background-size: 140px 140px; }
   .uiverse-midnight-sky .stars-2 { background-size: 210px 210px; }
   .uiverse-midnight-sky .stars-3 { background-size: 280px 280px; }

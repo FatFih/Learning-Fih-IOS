@@ -7,7 +7,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationC
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Exam reminders also show while the app is open
         UNUserNotificationCenter.current().delegate = self
         return true
     }

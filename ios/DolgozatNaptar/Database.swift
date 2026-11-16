@@ -1,10 +1,8 @@
 import Foundation
 import SQLite3
 
-// SQLite's "copy the text now" marker for bound strings
 private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
-// The app's database (same tables as Room on Android). One connection, used from the main thread only.
 final class Database {
     static let shared = Database()
 
@@ -52,8 +50,6 @@ final class Database {
         sqlite3_exec(db, sql, nil, nil, nil)
     }
 
-    // Runs an INSERT / UPDATE / DELETE; `values` fill the ? marks in order.
-    // False on failure (for example a username that is already taken).
     @discardableResult
     func run(_ sql: String, _ values: [Any?] = []) -> Bool {
         guard let statement = prepare(sql, values) else { return false }
@@ -63,7 +59,6 @@ final class Database {
 
     var lastInsertId: Int64 { sqlite3_last_insert_rowid(db) }
 
-    // Rows as [column: value]; values are Int64, Double or String (NULL columns are left out)
     func query(_ sql: String, _ values: [Any?] = []) -> [[String: Any]] {
         guard let statement = prepare(sql, values) else { return [] }
         defer { sqlite3_finalize(statement) }
@@ -91,7 +86,6 @@ final class Database {
         return rows
     }
 
-    // Everything in `body` happens, or (if it returns false) nothing does
     func transaction(_ body: () -> Bool) -> Bool {
         execute("BEGIN")
         if body() {

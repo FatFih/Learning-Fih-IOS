@@ -1,5 +1,3 @@
-# Builds the iPhone app on a GitHub Mac on every push to main (or by hand: Actions → iOS build → Run workflow).
-# The result is an unsigned .ipa under the run's "Artifacts"; Sideloadly signs it with your Apple ID when installing.
 name: iOS build
 
 on:

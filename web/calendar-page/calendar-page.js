@@ -1,8 +1,3 @@
-// Weekly timetable (like Kréta): pick a day in the week strip to see its classes,
-// edit a day's classes, and attach files to subjects.
-// `inApp` and `callNative` come from ../shared/menu.js
-
-// When each class starts and ends (1st ... 9th)
 const PERIOD_TIMES = {
 	1: ["7:30", "8:10"],
 	2: ["8:15", "9:00"],
@@ -16,9 +11,6 @@ const PERIOD_TIMES = {
 };
 const LAST_PERIOD = 9;
 
-// Exam reminders go off every day from this many days before the exam
-// (the Android side sets them; keep in sync with ExamReminders.kt).
-// The time of day is set in Beállítások and arrives with the timetable (reminderTime).
 const EXAM_REMINDER_DAYS = 3;
 
 const DAY_NAMES = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"];
@@ -58,8 +50,6 @@ const examEmpty = document.getElementById("examEmpty");
 const examError = document.getElementById("examError");
 const saveExamBtn = document.getElementById("saveExam");
 
-// In the app everything is stored by Android. In a desktop browser (Live Server)
-// the timetable is kept in localStorage instead, so the page can still be tried out.
 const PREVIEW_KEY = "previewTimetable";
 const PREVIEW_EXAMS_KEY = "previewExams";
 
@@ -117,7 +107,6 @@ const backend = inApp ? {
 	deleteFile: async () => false,
 };
 
-// ===== Helpers =====
 function el(tag, className, text) {
 	const element = document.createElement(tag);
 	if (className) element.className = className;
@@ -141,7 +130,6 @@ function sameDate(a, b) {
 	return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
-// "2026-11-04" (local date, the format exams are stored with)
 function isoDate(date) {
 	const pad = n => String(n).padStart(2, "0");
 	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
@@ -158,7 +146,6 @@ function isNow(period, now) {
 	return minutes >= start && minutes < end;
 }
 
-// Same as the Android side: files belong to the lowercased subject name
 function subjectKey(subject) {
 	return subject.trim().toLowerCase();
 }
@@ -173,7 +160,6 @@ function showError(element, text) {
 	element.hidden = false;
 }
 
-// Destructive buttons: the first tap asks, the second one does it
 function confirmTwice(button, onConfirm) {
 	const originalText = button.textContent;
 	button.addEventListener("click", () => {
@@ -192,15 +178,13 @@ function confirmTwice(button, onConfirm) {
 	});
 }
 
-// ===== State =====
 let timetable = { lessons: [], fileCounts: {}, exams: [] };
-// calendar-page.html?date=2026-11-13 (the main page's exam card) opens that day
 const startDate = (() => {
 	const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(new URLSearchParams(location.search).get("date") || "");
 	return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : new Date();
 })();
-let weekStart = mondayOf(startDate);              // Monday of the week shown
-let selectedDay = (startDate.getDay() + 6) % 7;  // 0 = Monday ... 6 = Sunday
+let weekStart = mondayOf(startDate);
+let selectedDay = (startDate.getDay() + 6) % 7;
 
 async function loadTimetable() {
 	timetable = (await backend.getTimetable()) || { lessons: [], fileCounts: {}, exams: [] };
@@ -212,7 +196,6 @@ function examAt(date, period) {
 	return timetable.exams.find(exam => exam.date === iso && exam.period === period);
 }
 
-// The classes of one weekday (1..7) in order; gaps between them become free periods
 function dayRows(day) {
 	const lessons = timetable.lessons.filter(l => l.day === day).sort((a, b) => a.period - b.period);
 	if (!lessons.length) return [];
@@ -223,7 +206,6 @@ function dayRows(day) {
 	return rows;
 }
 
-// ===== Week strip + lesson list =====
 function render() {
 	renderWeek();
 	renderDay();
@@ -306,19 +288,14 @@ document.getElementById("nextWeek").addEventListener("click", () => {
 	weekStart = addDays(weekStart, 7);
 	render();
 });
-// Tapping the date range jumps back to this week
 weekLabel.addEventListener("click", () => {
 	weekStart = mondayOf(new Date());
 	selectedDay = (new Date().getDay() + 6) % 7;
 	render();
 });
 
-// Keeps the "now" highlight on the right class
 setInterval(renderDay, 60 * 1000);
 
-// ===== Popups =====
-// Opening a popup adds a history entry, so Android's back button closes the popup
-// instead of leaving the page.
 let openModal = null;
 
 function showModal(modal) {
@@ -343,8 +320,7 @@ document.addEventListener("keydown", e => {
 	if (e.key === "Escape") closeModal();
 });
 
-// ===== Editor =====
-let editRows = []; // { subject, room } or { free: true }, in the order they were entered
+let editRows = [];
 
 for (let period = 1; period <= LAST_PERIOD; period++) {
 	firstPeriod.append(new Option(`${period}. óra (${PERIOD_TIMES[period][0]})`, period));
@@ -429,7 +405,6 @@ function renderEditRows() {
 		return li;
 	}));
 
-	// No more rows once the 9th class is reached
 	const full = first + editRows.length > LAST_PERIOD;
 	addLessonBtn.disabled = full;
 	addFreeBtn.disabled = full;
@@ -452,7 +427,6 @@ document.getElementById("cancelEdit").addEventListener("click", closeModal);
 
 saveEditBtn.addEventListener("click", async () => {
 	const first = Number(firstPeriod.value);
-	// Free periods at the end don't matter
 	const rows = editRows.slice();
 	while (rows.length && rows[rows.length - 1].free) rows.pop();
 
@@ -478,9 +452,8 @@ saveEditBtn.addEventListener("click", async () => {
 
 document.getElementById("editDayBtn").addEventListener("click", openEditor);
 
-// ===== Lesson details + files =====
 let detailLesson = null;
-let detailDate = null; // the date of the class that was tapped
+let detailDate = null;
 
 function openDetails(lesson) {
 	detailLesson = lesson;
@@ -498,8 +471,6 @@ function openDetails(lesson) {
 	loadFiles();
 }
 
-// ===== Exam of the open class =====
-// Lists the days the reminder will still go off (3, 2 and 1 day before, the passed ones left out)
 function reminderText(date) {
 	const now = new Date();
 	const days = [];
@@ -513,7 +484,6 @@ function reminderText(date) {
 	return `Emlékeztető ${hours}:${String(minutes).padStart(2, "0")}-kor: ${days.join(", ")}`;
 }
 
-// Shows the exam (or the "add" button) for the open class; editing = show the text box
 function renderExam(editing = false) {
 	const exam = examAt(detailDate, detailLesson.period);
 	examError.hidden = true;
@@ -601,7 +571,6 @@ uploadBtn.addEventListener("click", async () => {
 });
 
 document.getElementById("closeDetails").addEventListener("click", closeModal);
-// Tapping next to the details popup closes it
 details.addEventListener("click", e => {
 	if (e.target === details) closeModal();
 });

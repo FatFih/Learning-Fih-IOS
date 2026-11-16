@@ -1,7 +1,6 @@
-// `inApp`, `callNative` and `sessionReady` come from ../shared/menu.js
 const MONTHS = ["január", "február", "március", "április", "május", "június",
 	"július", "augusztus", "szeptember", "október", "november", "december"];
-const DAY_NAMES = ["vasárnap", "hétfő", "kedd", "szerda", "csütörtök", "péntek", "szombat"]; // Date.getDay() order
+const DAY_NAMES = ["vasárnap", "hétfő", "kedd", "szerda", "csütörtök", "péntek", "szombat"];
 
 sessionReady.then(session => {
 	if (session) document.getElementById("welcomeMessage").textContent = `Üdv, ${session.displayName}!`;
@@ -14,7 +13,6 @@ function isoDate(date) {
 
 async function loadExams() {
 	if (inApp) return (await callNative("getTimetable"))?.exams || [];
-	// Live Server preview: the calendar page keeps its exams in localStorage
 	try {
 		return JSON.parse(localStorage.getItem("previewExams")) || [];
 	} catch {
@@ -22,7 +20,6 @@ async function loadExams() {
 	}
 }
 
-// Card for one exam. A lone card says "Következő dolgozat"; in the grid the countdown is enough.
 function examCard(exam, single) {
 	const [year, month, day] = exam.date.split("-").map(Number);
 	const date = new Date(year, month - 1, day);
@@ -37,7 +34,6 @@ function examCard(exam, single) {
 	if (single) top.append(span("exam-label", "Következő dolgozat"));
 	top.append(span("exam-countdown", daysLeft === 0 ? "Ma" : daysLeft === 1 ? "Holnap" : `${daysLeft} nap múlva`));
 
-	// "november 11., szerda · 1. óra" - the period goes on its own line in the grid (main.css)
 	const when = span("exam-when", `${MONTHS[month - 1]} ${day}., ${DAY_NAMES[date.getDay()]}`);
 	when.append(span("exam-period", `${exam.period}. óra`));
 
@@ -53,8 +49,6 @@ function span(className, text) {
 	return element;
 }
 
-// Every exam from today on (today's included), nearest first:
-// top left, top right, then the next row, and so on
 async function showExams() {
 	const today = isoDate(new Date());
 	const upcoming = (await loadExams())

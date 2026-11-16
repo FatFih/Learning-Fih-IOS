@@ -1,20 +1,12 @@
-/* Light theme (Beállítások → Téma → Világos).
-   theme.js puts data-theme="light" on <html>. This file is loaded LAST on every page,
-   and every rule starts with :root[data-theme="light"], so it wins over the dark page styles.
-   Dark: white outlines + dark glass on a night sky. Light: dark outlines + light glass on a day sky. */
-
 :root[data-theme="light"] {
     color-scheme: light;
 }
 
-/* ===== Sky: day instead of night ===== */
 :root[data-theme="light"],
 :root[data-theme="light"] .uiverse-midnight-sky {
     background-color: #bfe3fa;
 }
 
-/* The body must stay see-through: with its own background it would paint over the sky
-   (the sky sits behind it at z-index -1), hiding the clouds' glow and the sun */
 :root[data-theme="light"] body {
     background-color: transparent;
 }
@@ -27,7 +19,6 @@
         #bfe3fa;
 }
 
-/* No stars or meteors during the day */
 :root[data-theme="light"] .uiverse-midnight-sky .stars,
 :root[data-theme="light"] .uiverse-midnight-sky .meteor {
     display: none;
@@ -37,12 +28,10 @@
     opacity: 0.04;
 }
 
-/* ===== The moon becomes a sun - the catfish stays, glowing golden with rays behind it ===== */
 :root[data-theme="light"] .uiverse-midnight-sky .moon {
     filter: drop-shadow(0 0 16px rgba(255, 170, 0, 0.65));
 }
 
-/* catfish.js draws the fish with this light colour; make it golden */
 :root[data-theme="light"] .uiverse-midnight-sky .moon svg [fill="#fdfbd3"] {
     fill: #ffb81c;
 }
@@ -51,7 +40,6 @@
     stroke: #ffb81c;
 }
 
-/* Sun glow + slowly turning rays behind the fish */
 :root[data-theme="light"] .uiverse-midnight-sky .moon::before {
     content: "";
     position: absolute;
@@ -72,7 +60,6 @@
     }
 }
 
-/* ===== Text ===== */
 :root[data-theme="light"] body,
 :root[data-theme="light"] button,
 :root[data-theme="light"] .side-menu a,
@@ -83,7 +70,6 @@
     color: #1b2333;
 }
 
-/* Quieter text (was semi-transparent white) */
 :root[data-theme="light"] .hint,
 :root[data-theme="light"] .empty,
 :root[data-theme="light"] .lesson-info .room,
@@ -105,7 +91,6 @@
     color: #d63031;
 }
 
-/* ===== Glass surfaces: light glass, dark outline ===== */
 :root[data-theme="light"] .navbar,
 :root[data-theme="light"] .side-menu,
 :root[data-theme="light"] .bottom-bar,
@@ -124,7 +109,6 @@
     background-color: rgba(255, 255, 255, 0.88);
 }
 
-/* Exams keep their red */
 :root[data-theme="light"] .exam-card,
 :root[data-theme="light"] .lesson.has-exam {
     border-color: #ff6b6b;
@@ -138,7 +122,6 @@
     background: #1b2333;
 }
 
-/* ===== Pressed / current states ===== */
 :root[data-theme="light"] .menu-toggle:hover,
 :root[data-theme="light"] .menu-toggle:active,
 :root[data-theme="light"] .side-menu a:active,
@@ -155,7 +138,6 @@
     color: white;
 }
 
-/* ===== Buttons (outlined, filled dark when pressed) ===== */
 :root[data-theme="light"] .containter button,
 :root[data-theme="light"] .btn {
     border-color: #1b2333;
@@ -183,7 +165,6 @@
     border-color: #d63031;
 }
 
-/* ===== Form fields ===== */
 :root[data-theme="light"] input,
 :root[data-theme="light"] select,
 :root[data-theme="light"] textarea {
@@ -200,7 +181,6 @@
     outline-color: #1b2333;
 }
 
-/* ===== Calendar ===== */
 :root[data-theme="light"] .day.today .day-num {
     border-color: #1b2333;
 }

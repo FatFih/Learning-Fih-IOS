@@ -20,7 +20,6 @@ window.onNativeResult = (callId, result) => {
     pending.delete(String(callId));
 };
 
-// Already logged in -> straight to the main page (the app answers asynchronously on iOS)
 callNative("getSession").then(session => {
     if (session) location.replace("../main-page/main.html");
 });

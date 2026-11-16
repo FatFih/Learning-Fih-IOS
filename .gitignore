@@ -1,7 +1,5 @@
-# Generated on the build Mac by XcodeGen from ios/project.yml
 ios/*.xcodeproj/
 ios/Info.plist
-# Build output
 build/
 DerivedData/
 Payload/

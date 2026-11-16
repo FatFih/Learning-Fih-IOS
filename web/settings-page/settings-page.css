@@ -6,7 +6,6 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Page content between the top bar (ends at 74px) and the bottom bar */
 .settings {
     box-sizing: border-box;
     width: min(560px, 100%);
@@ -22,7 +21,6 @@ body {
     font-size: 1.5rem;
 }
 
-/* White outline, slightly dark, blurred - same as the top bar and the cards elsewhere */
 .card {
     padding: 16px 18px;
     border: 2px solid white;
@@ -53,7 +51,6 @@ body {
     color: #ff6b6b;
 }
 
-/* ----- Dark / light switch ----- */
 .segmented {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -86,7 +83,6 @@ select:focus-visible {
     outline-offset: 3px;
 }
 
-/* ----- Reminder time ----- */
 .setting-row {
     display: flex;
     align-items: center;
@@ -94,7 +90,6 @@ select:focus-visible {
     gap: 12px;
 }
 
-/* 24-hour time: hour and minute dropdowns side by side */
 .time-picker {
     display: flex;
     align-items: center;
@@ -128,7 +123,7 @@ select option {
   height: 100%;
   min-height: 0;
   height: 100vh;
-  height: 100lvh; /* covers the area under Android's toolbar/gesture bar */
+  height: 100lvh;
   overflow: hidden;
   background-color: #050505;
   z-index: -1;
@@ -137,7 +132,6 @@ select option {
   justify-content: center;
 }
 
-/* Fine grain over the whole sky: hides the stepped "rings" (gradient banding) on Android */
 .uiverse-midnight-sky::after {
   content: "";
   position: absolute;
@@ -147,7 +141,6 @@ select option {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Base Sky Layer (with large soft glows for the acrylic blur to pick up) */
 .uiverse-midnight-sky .sky-canvas {
   width: 100%;
   height: 100%;
@@ -160,7 +153,6 @@ select option {
     #050505;
 }
 
-/* Generic star layer style */
 .uiverse-midnight-sky .stars {
   position: absolute;
   inset: 0;
@@ -168,7 +160,6 @@ select option {
   pointer-events: none;
 }
 
-/* Layer 1: Small fast twinkling stars - High density */
 .uiverse-midnight-sky .stars-1 {
   background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent),
     radial-gradient(1px 1px at 30% 20%, #fff, transparent),
@@ -179,7 +170,6 @@ select option {
   animation: twinkle 3s ease-in-out infinite;
 }
 
-/* Layer 2: Medium slower twinkling stars */
 .uiverse-midnight-sky .stars-2 {
   background-image: radial-gradient(1.5px 1.5px at 20% 40%, #fff, transparent),
     radial-gradient(1.5px 1.5px at 60% 85%, #fff, transparent),
@@ -188,7 +178,6 @@ select option {
   animation: twinkle 5s ease-in-out infinite 1s;
 }
 
-/* Layer 3: Larger, very slow twinkling stars */
 .uiverse-midnight-sky .stars-3 {
   background-image: radial-gradient(2px 2px at 40% 70%, #fff, transparent),
     radial-gradient(2px 2px at 10% 80%, #fff, transparent),
@@ -197,7 +186,6 @@ select option {
   animation: twinkle 7s ease-in-out infinite 2s;
 }
 
-/* Meteor / Shooting Star Layer */
 .uiverse-midnight-sky .meteor {
   position: absolute;
   width: 2px;
@@ -209,7 +197,6 @@ select option {
   pointer-events: none;
 }
 
-/* Meteor Tail */
 .uiverse-midnight-sky .meteor::after {
   content: "";
   position: absolute;
@@ -220,7 +207,6 @@ select option {
   background: linear-gradient(90deg, #fff, transparent);
 }
 
-/* Meteor Instances with staggered starts */
 .uiverse-midnight-sky .m1 {
   top: 10%;
   left: 110%;
@@ -237,7 +223,6 @@ select option {
   animation: shoot 10s linear infinite 2s;
 }
 
-/* The Catfish (replaces the moon; the HTML element still has class "moon") */
 .uiverse-midnight-sky .moon {
   position: absolute;
   top: 15%;
@@ -252,7 +237,6 @@ select option {
   animation: swim 9s ease-in-out infinite;
 }
 
-/* When catfish.js has drawn the fish (needed for the wink), hide the background copy */
 .uiverse-midnight-sky .moon:has(svg) {
   background: none;
 }
@@ -263,7 +247,6 @@ select option {
   height: 100%;
 }
 
-/* Winking: the open eye is swapped for a closed-eye curve for a moment */
 .uiverse-midnight-sky .moon .eye .open,
 .uiverse-midnight-sky .moon .eye .shut {
   transition: opacity 60ms ease;
@@ -277,7 +260,6 @@ select option {
   opacity: 1;
 }
 
-/* Catfish drifting animation */
 @keyframes swim {
   0%,
   100% {
@@ -288,7 +270,6 @@ select option {
   }
 }
 
-/* Twinkle Animation */
 @keyframes twinkle {
   0%,
   100% {
@@ -299,7 +280,6 @@ select option {
   }
 }
 
-/* Shooting Star Animation - Using % instead of vw/vh */
 @keyframes shoot {
   0% {
     transform: translateX(0) translateY(0) rotate(-35deg);
@@ -318,9 +298,7 @@ select option {
   }
 }
 
-/* ===== Phone touch-ups ===== */
 @media (max-width: 600px) {
-  /* Glows sized to the screen width, with many eased stops so Android doesn't show banding */
   .uiverse-midnight-sky .sky-canvas {
     background:
       radial-gradient(circle 85vw at 18% 42%, rgba(100, 70, 220, 0.5) 0%, rgba(100, 70, 220, 0.36) 25%, rgba(100, 70, 220, 0.21) 50%, rgba(100, 70, 220, 0.08) 72%, rgba(100, 70, 220, 0.02) 88%, rgba(100, 70, 220, 0.0) 100%),
@@ -329,7 +307,6 @@ select option {
       #050505;
   }
 
-  /* Smaller catfish, kept clear of the card */
   .uiverse-midnight-sky .moon {
     top: 8%;
     right: 8%;
@@ -337,7 +314,6 @@ select option {
     height: 80px;
   }
 
-  /* Denser stars so the sky doesn't look empty on a small screen */
   .uiverse-midnight-sky .stars-1 { background-size: 140px 140px; }
   .uiverse-midnight-sky .stars-2 { background-size: 210px 210px; }
   .uiverse-midnight-sky .stars-3 { background-size: 280px 280px; }

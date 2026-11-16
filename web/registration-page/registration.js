@@ -6,10 +6,8 @@ const registrationForm = document.getElementById("loginform");
 const pending = new Map();
 let nextCallId = 0;
 
-// How long the "success" message stays on screen before we go to the login page
 const REDIRECT_DELAY_MS = 2000;
 
-// true while a registration is being sent / after it succeeded, so the form can't be submitted twice
 let busy = false;
 
 message.hidden = true;
@@ -27,7 +25,6 @@ window.onNativeResult = (callId, result) => {
     pending.delete(String(callId));
 };
 
-// Always replaces the old message, so the text and color always match the latest attempt
 function showMessage(text, color) {
     message.hidden = false;
     message.style.color = color;
@@ -54,15 +51,12 @@ registrationForm.addEventListener("submit", async event => {
 
     showMessage("Sikeres regisztráció. Most bejelentkezhetsz.", "green");
 
-    // Lock the form while the message is shown, then go to the login page
     registrationForm.querySelectorAll("input, button").forEach(element => {
         element.disabled = true;
     });
     setTimeout(() => location.replace("../login-page/login.html"), REDIRECT_DELAY_MS);
 });
 
-// Keep the field being typed in visible above the on-screen keyboard.
-// The WebView shrinks when the keyboard opens, so wait a moment, then scroll the field to the middle.
 function keepFocusedFieldVisible() {
     const active = document.activeElement;
     if (active && active.tagName === "INPUT") {
@@ -74,5 +68,4 @@ document.querySelectorAll("input").forEach(input => {
     input.addEventListener("focus", () => setTimeout(keepFocusedFieldVisible, 300));
 });
 
-// The viewport height changes when the keyboard appears/disappears
 window.addEventListener("resize", () => setTimeout(keepFocusedFieldVisible, 100));

@@ -1,14 +1,10 @@
 import UIKit
 import WebKit
 
-// Shows the app's pages (the web/ folder, bundled with the app) in a WKWebView.
-// Same idea as MainActivity on Android: the pages are served from a fake origin
-// (app://local/...) so localStorage and relative links work like on a real website.
 final class WebViewController: UIViewController, WKNavigationDelegate {
     private var webView: WKWebView!
     private var bridge: NativeBridge!
 
-    // The page's theme (dark / light), set through the bridge by theme.js
     var lightTheme = false {
         didSet {
             view.backgroundColor = lightTheme ? Self.lightBackground : Self.darkBackground
@@ -23,7 +19,6 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
         lightTheme ? .darkContent : .lightContent
     }
 
-    // The pages are written for portrait phones
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .portrait }
 
     override func viewDidLoad() {
@@ -33,9 +28,6 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
         let configuration = WKWebViewConfiguration()
         configuration.setURLSchemeHandler(AppSchemeHandler(), forURLScheme: AppSchemeHandler.scheme)
 
-        // window.Android: the pages call the app through this object, exactly like on Android.
-        // Every call becomes a message to NativeBridge; answers come back through
-        // window.onNativeResult(callId, result), also like on Android.
         let shim = """
             window.Android = new Proxy({}, {
                 get: (_, method) => (...args) =>
@@ -52,16 +44,14 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
         webView.backgroundColor = .clear
         webView.scrollView.backgroundColor = .clear
         webView.scrollView.contentInsetAdjustmentBehavior = .never
-        // Sideways swipes open / close the app's own menu, so no browser back swipe
         webView.allowsBackForwardNavigationGestures = false
         if #available(iOS 16.4, *) {
-            webView.isInspectable = true // Safari → Develop menu, on a Mac
+            webView.isInspectable = true
         }
 
         bridge = NativeBridge(controller: self, webView: webView)
         webView.configuration.userContentController.add(bridge, name: "native")
 
-        // The pages stay inside the safe area (below the notch / Dynamic Island, above the home bar)
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
         NSLayoutConstraint.activate([
@@ -74,7 +64,6 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
         webView.load(URLRequest(url: URL(string: "\(AppSchemeHandler.scheme)://local/login-page/login.html")!))
     }
 
-    // Our pages stay in the app; any other link opens in Safari
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
@@ -90,7 +79,6 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
     }
 }
 
-// Serves the files of the bundled web/ folder for app://local/<path>
 final class AppSchemeHandler: NSObject, WKURLSchemeHandler {
     static let scheme = "app"
 
@@ -98,11 +86,9 @@ final class AppSchemeHandler: NSObject, WKURLSchemeHandler {
 
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         guard let url = urlSchemeTask.request.url else { return }
-        // "/login-page/login.html" -> web/login-page/login.html
         let relativePath = url.path.hasPrefix("/") ? String(url.path.dropFirst()) : url.path
         let file = root.appendingPathComponent(relativePath).standardizedFileURL
 
-        // Only files inside web/
         guard file.path.hasPrefix(root.path), let data = try? Data(contentsOf: file) else {
             urlSchemeTask.didFailWithError(URLError(.fileDoesNotExist))
             return
